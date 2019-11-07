@@ -1,0 +1,74 @@
+﻿@model IEnumerable<Banking.Models.CheckingAccount>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>My Checking Accounts</h1>
+
+<p>
+    <a asp-action="Create">Create Checking Account</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Balance)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsOpen)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InterestRate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccountNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Balance)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsOpen)
+                @{
+                    if (item.IsOpen)
+                    {
+                        <span>Open</span>
+                    }
+                    else
+                    {
+                        <span>Closed</span>
+                    }
+                }
+
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InterestRate)
+            </td>
+            <td>
+                @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |*@
+              
+                <a asp-action="Withdraw" asp-route-id="@item.Id">Withdraw</a> |
+
+           <a asp-action="Deposit" asp-route-id="@item.Id">Deposit</a> |
+
+           <a asp-action="Transfer" asp-route-id="@item.Id">Transfer</a> |
+
+           <a asp-action="AccountTransactions" asp-route-id="@item.Id">Transactions</a> |
+
+           <a asp-action="Delete" asp-route-id="@item.Id">Close Account</a>
+
+       </td>
+
+   </tr>
+}
+    </tbody>
+</table>

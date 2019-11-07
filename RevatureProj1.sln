@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29409.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RevatureProj1", "RevatureProj1\RevatureProj1.csproj", "{006F3EE4-36F1-49A8-AE88-C5027E3EA0DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Banking.Models", "Banking.Models\Banking.Models.csproj", "{10833492-C3A2-4BDA-9146-CE2D5DEEF8A5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{006F3EE4-36F1-49A8-AE88-C5027E3EA0DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{006F3EE4-36F1-49A8-AE88-C5027E3EA0DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{006F3EE4-36F1-49A8-AE88-C5027E3EA0DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{006F3EE4-36F1-49A8-AE88-C5027E3EA0DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10833492-C3A2-4BDA-9146-CE2D5DEEF8A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10833492-C3A2-4BDA-9146-CE2D5DEEF8A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10833492-C3A2-4BDA-9146-CE2D5DEEF8A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10833492-C3A2-4BDA-9146-CE2D5DEEF8A5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6E6FC2B6-E233-4C1C-9231-738B6D802357}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,66 @@
+﻿
+@{
+    ViewData["Title"] = "AccountTransactions";
+}
+
+<h1>List of Transactions</h1>
+
+@using (Html.BeginForm("AccountTransactions","CheckingAccounts"))
+{
+    <div class="form-group">
+        <span>Start Time</span>
+        <span class="col-xs-3">
+            <input type="date" name="start" />
+        </span>
+        <span>End Time</span>
+        <span class="col-xs-3">
+            <input type="date" name="end" />
+        </span>
+        <span class="form-group">
+            <input type="submit" value="Submit Filter" class="btn btn-primary" />
+        </span>
+    </div>
+}
+@*<form asp-action="AccountsTransactions">
+</form>*@
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <p>Account Number</p>
+            </th>
+            <th>
+                <p>Transaction Type</p>
+            </th>
+            <th>
+                <p>Account Number</p>
+            </th>
+            <th>
+                <p>Account Number</p>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.AccountNum
+                </td>
+                <td>
+                    @item.Type
+                </td>
+                <td>
+                    @item.Amount
+                </td>
+                <td>
+                    @item.TimeTransaction
+                </td>
+            </tr>
+        }
+    </tbody>
+
+    <a asp-action="Index">Back to Checking Accounts</a>
+
+</table>

@@ -1,0 +1,21 @@
+﻿@model IEnumerable<Banking.Models.CheckingAccount>
+
+@{
+    ViewData["Title"] = "Transfer";
+}
+
+<h1>Choose Which Account to Transfer Too</h1>
+
+<form asp-action="Transfer">
+    <select name="account">
+            @foreach (var item in Model)
+            {
+
+                <option value="@item.Balance">@item.AccountNumber</option>
+            }
+
+        </select>
+    <input type="submit" value="Transfer To" class="btn btn-primary" onclick="CheckBalance()" />
+    <a asp-action="Index">Back to List</a>
+</form>
+
