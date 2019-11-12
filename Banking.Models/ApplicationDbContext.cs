@@ -20,6 +20,8 @@ namespace RevatureProj1.Data
         public DbSet<CheckingAccount> CheckingAccounts { get; set; }
         public DbSet<Transaction> AccountTransactions { get; set; }
         public DbSet<BusinessAccount> BusinessAccounts { get; set; }
+        public DbSet<LoanAccount> LoanAccounts { get; set; }
+        public DbSet<CDAccounts> TermAccounts { get; set; }
 
     }
 }

@@ -5,7 +5,7 @@
 
 <h1>List of Transactions</h1>
 
-@using (Html.BeginForm("AccountTransactions","CheckingAccounts"))
+@using (Html.BeginForm("AccountTransactions","LoanAccounts"))
 {
 <div class="form-group">
     <span>Start Time</span>
@@ -25,7 +25,8 @@
 
 </div>
 }
-
+@*<form asp-action="AccountsTransactions">
+</form>*@
 <table class="table table-hover">
     <thead>
         <tr class="table-primary">

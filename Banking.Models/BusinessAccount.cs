@@ -28,8 +28,6 @@ namespace Banking.Models
         [DisplayName("Account Number")]
         public string AccountNumber { get; set; }
 
-        // public virtual UserBanking User { get; set; }
-
         public string UserID { get; set; }
     }
 }

@@ -16,28 +16,28 @@ using RevatureProj1.ViewModels;
 namespace RevatureProj1.Controllers
 {
     [Authorize]
-    public class BusinessAccountsController : Controller
+    public class CDAccountsController : Controller
     {
         private static readonly Random getrandom = new Random();
 
         private readonly ApplicationDbContext _context;
 
-        public BusinessAccountsController(ApplicationDbContext context)
+        public CDAccountsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: BusinessAccounts
+        // GET: CDAccounts
         public async Task<IActionResult> Index()
         {
             var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var checkList = await _context.BusinessAccounts.Where(d => d.UserID == user).ToListAsync();
+            var cdAccounts = await _context.TermAccounts.Where(d => d.UserID == user).ToListAsync();
 
-            return View(checkList);
+            return View(cdAccounts);
         }
 
-        // GET: BusinessAccounts/Details/5
+        // GET: CDAccounts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -45,62 +45,63 @@ namespace RevatureProj1.Controllers
                 return NotFound();
             }
 
-            var businessAccount = await _context.BusinessAccounts
+            var cDAccounts = await _context.TermAccounts
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (businessAccount == null)
+            if (cDAccounts == null)
             {
                 return NotFound();
             }
 
-            return View(businessAccount);
+            return View(cDAccounts);
         }
 
-        // GET: BusinessAccounts/Create
+        // GET: CDAccounts/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: BusinessAccounts/Create
+        // POST: CDAccounts/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Balance,Overdraft,IsOpen,InterestRate,AccountNumber,UserID")] BusinessAccount businessAccount)
+        public async Task<IActionResult> Create([Bind("Id,Balance,IsOpen,InterestRate,AccountNumber,MaturityDate,CreationDate,UserID")] CDAccounts cDAccounts)
         {
             if (ModelState.IsValid)
             {
+                //var userId = _context._httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                businessAccount.UserID = user;
-                businessAccount.IsOpen = true;
-                businessAccount.Balance = 0M;
-                businessAccount.Overdraft = 0M;
-                businessAccount.InterestRate = randomInterestRate();
-                businessAccount.AccountNumber = randomAccountNumber();
-                _context.Add(businessAccount);
+                cDAccounts.UserID = user;
+                cDAccounts.IsOpen = true;
+                cDAccounts.CreationDate = DateTime.Today;
+                cDAccounts.InterestRate = randomInterestRate();
+                cDAccounts.AccountNumber = randomAccountNumber();
+                _context.Add(cDAccounts);
+                AddTransaction(cDAccounts, cDAccounts.Balance, "CD Deposit");
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(businessAccount);
+            return View(cDAccounts);
         }
 
-        // GET: BusinessAccounts/Edit/5
+        // GET: CDAccounts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             return View();
         }
 
-        // POST: BusinessAccounts/Edit/5
+        // POST: CDAccounts/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Balance,Overdraft,IsOpen,InterestRate,AccountNumber,UserID")] BusinessAccount businessAccount)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Balance,IsOpen,InterestRate,AccountNumber,MaturityDate,CreationDate,UserID")] CDAccounts cDAccounts)
         {
             return View();
         }
 
-        // GET: BusinessAccounts/Delete/5
+        // GET: CDAccounts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -109,23 +110,23 @@ namespace RevatureProj1.Controllers
             }
             var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var businessAccount = await _context.BusinessAccounts
+            var cDAccounts = await _context.TermAccounts
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (businessAccount == null || businessAccount.UserID != user)
+            if (cDAccounts == null || cDAccounts.UserID != user)
             {
                 return NotFound();
             }
 
-            return View(businessAccount);
+            return View(cDAccounts);
         }
 
-        // POST: BusinessAccounts/Delete/5
+        // POST: CDAccounts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var bussAcct = await _context.BusinessAccounts.FindAsync(id);
-            bussAcct.IsOpen = false;
+            var cDAccounts = await _context.TermAccounts.FindAsync(id);
+            cDAccounts.IsOpen = false;
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -139,155 +140,49 @@ namespace RevatureProj1.Controllers
             }
             var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var bussinessAcct = await _context.BusinessAccounts.FindAsync(id);
-            if (bussinessAcct == null || bussinessAcct.UserID != user)
+            var cdAccount = await _context.TermAccounts.FindAsync(id);
+            if (cdAccount == null || cdAccount.UserID != user)
             {
                 return NotFound();
             }
-            return View(bussinessAcct);
-
+            return View(cdAccount);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Withdraw(int id, BusinessAccount businessAcct)
+        public async Task<IActionResult> Withdraw(int id, CDAccounts cDAccount)
         {
-            if (id != businessAcct.Id)
+            if (id != cDAccount.Id)
             {
                 return NotFound();
             }
 
-            var currAcct = await _context.BusinessAccounts.FirstOrDefaultAsync(m => m.Id == id);
+            var currAcct = await _context.TermAccounts.FirstOrDefaultAsync(m => m.Id == id);
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var newBalance = currAcct.Balance - cDAccount.Balance;
 
-                    var newBalance = currAcct.Balance - businessAcct.Balance;
-
-                    if (CheckWithdrawOverdraft(currAcct, businessAcct)) //check if enough funds to withdraw
+                    int num = DateTime.Compare(DateTime.Today, currAcct.MaturityDate);
+                    if (num < 0)
                     {
-                        if (currAcct.Balance > 0) //overdraft the first time
-                        {
-                            var overdraft = businessAcct.Balance - currAcct.Balance;
-                            var overdraftTotal = overdraft + CalculateOverdraftInterest(overdraft, currAcct);
-                            currAcct.Overdraft += overdraftTotal; //Initialize Overdraft amount for first time you overdraft
-                            newBalance = 0M;
-                            AddTransaction(currAcct, overdraftTotal, "Overdraft");
-                            AddTransaction(currAcct, currAcct.Balance, "Withdraw");
-                            currAcct.Balance = newBalance;
-                            await _context.SaveChangesAsync();
-                        }
-                        else if (currAcct.Balance == 0)
-                        {
-                            var overdraft = businessAcct.Balance;
-                            var overdraftTotal = overdraft + CalculateOverdraftInterest(overdraft, currAcct);
-                            currAcct.Overdraft += overdraftTotal;
-                            newBalance = 0M;
-                            AddTransaction(currAcct, overdraftTotal, "Overdraft");
-                            currAcct.Balance = newBalance;
-                            await _context.SaveChangesAsync();
-                        }
-                    }
-                    else if (businessAcct.Balance == 0)
-                    {
-                        ModelState.AddModelError("", "Did not specify Withdraw Amount");
+                        ModelState.AddModelError("", "Cannot Withdraw Maturity Date has not been reached");
                         return View(currAcct);
                     }
-                    else
-                    {
-                        AddTransaction(currAcct, businessAcct.Balance, "Withdraw");
-                        currAcct.Balance = newBalance;
-                        await _context.SaveChangesAsync();
-                    }
-                    
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!BusinessAccountExists(businessAcct.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(currAcct);
-        }
 
-        public async Task<IActionResult> Deposit(int? id)
-        {
-
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var bussAcct = await _context.BusinessAccounts.FindAsync(id);
-            if (bussAcct == null || bussAcct.UserID != user)
-            {
-                return NotFound();
-            }
-            return View(bussAcct);
-
-        }
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Deposit(int id, BusinessAccount businessAcct)
-        {
-            if (id != businessAcct.Id)
-            {
-                return NotFound();
-            }
-
-            var currAcct = await _context.BusinessAccounts.FirstOrDefaultAsync(m => m.Id == id);
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    decimal newBalance = 0;
-                    if (CheckDepositAmount(currAcct, businessAcct)) //check if deposit amount positive
+                    if (CheckWithdrawOverdraft(currAcct, cDAccount)) //check if enough funds to withdraw
                     {
                         return View(currAcct);
                     }
-                    if (currAcct.Overdraft > 0)
-                    {
-                        if(businessAcct.Balance > currAcct.Overdraft) // pay off the entire overdraft and deposit whats left
-                        {
-                            newBalance = businessAcct.Balance - currAcct.Overdraft;
-                            AddTransaction(currAcct, currAcct.Overdraft, "Overdraft Pay");
-                            currAcct.Overdraft = 0M;
-                            AddTransaction(currAcct, newBalance, "Deposit");
-
-                        }
-                        else if(businessAcct.Balance < currAcct.Overdraft)
-                        {
-                            currAcct.Overdraft -= businessAcct.Balance;
-                            AddTransaction(currAcct, businessAcct.Balance, "Overdraft Pay");
-
-                        }
-
-                    }
-                    else
-                    {
-                        newBalance = currAcct.Balance + businessAcct.Balance;
-                        AddTransaction(currAcct, businessAcct.Balance, "Deposit");
-                    }
-
-
+                    AddTransaction(currAcct, cDAccount.Balance, "Direct Withdraw");
                     currAcct.Balance = newBalance;
                     //_context.Update(checkingAccount);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BusinessAccountExists(businessAcct.Id))
+                    if (!CDAccountsExists(cDAccount.Id))
                     {
                         return NotFound();
                     }
@@ -298,6 +193,7 @@ namespace RevatureProj1.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+             //return Content(currAcct.AccountNumber);
 
             return View(currAcct);
         }
@@ -309,14 +205,14 @@ namespace RevatureProj1.Controllers
             {
                 return NotFound();
             }
-             var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var businessAcct = await _context.BusinessAccounts.FindAsync(id);
-            if (businessAcct == null || businessAcct.UserID != user)
+            var cDAccounts = await _context.TermAccounts.FindAsync(id);
+            if (cDAccounts == null || cDAccounts.UserID != user)
             {
                 return NotFound();
             }
-            var transactionList = await _context.AccountTransactions.Where(d => d.UserID == businessAcct.UserID && d.AccountNum == businessAcct.AccountNumber).ToListAsync();
+            var transactionList = await _context.AccountTransactions.Where(d => d.UserID == cDAccounts.UserID && d.AccountNum == cDAccounts.AccountNumber).ToListAsync();
 
             if (transactionList == null)
             {
@@ -328,10 +224,10 @@ namespace RevatureProj1.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AccountTransactions(int? id, DateTime start, DateTime end, string sort10="")
+        public async Task<IActionResult> AccountTransactions(int? id, DateTime start, DateTime end, string sort10 = "")
         {
-            var bussAcct = await _context.BusinessAccounts.FindAsync(id);
-            var transactionList = await _context.AccountTransactions.Where(d => d.UserID == bussAcct.UserID && d.AccountNum == bussAcct.AccountNumber).ToListAsync();
+            var cDAccounts = await _context.TermAccounts.FindAsync(id);
+            var transactionList = await _context.AccountTransactions.Where(d => d.UserID == cDAccounts.UserID && d.AccountNum == cDAccounts.AccountNumber).ToListAsync();
 
             if (sort10.Equals("yes"))
             {
@@ -371,14 +267,14 @@ namespace RevatureProj1.Controllers
                 return NotFound();
             }
 
-            ViewBag.Account = "bus";
+            ViewBag.Account = "chk";
             ViewBag.Success = false;
 
             var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var currAcct = await _context.BusinessAccounts.FirstOrDefaultAsync(m => m.Id == id);
+            var currAcct = await _context.TermAccounts.FirstOrDefaultAsync(m => m.Id == id);
 
             var checkList = await _context.CheckingAccounts.Where(d => d.UserID == user && d.IsOpen != false).ToListAsync();
-            var bussinesList = await _context.BusinessAccounts.Where(d => d.UserID == user && d.Id != id && d.IsOpen != false).ToListAsync();
+            var bussinesList = await _context.BusinessAccounts.Where(d => d.UserID == user && d.IsOpen != false).ToListAsync();
             var loanList = await _context.LoanAccounts.Where(d => d.UserID == user && d.IsOpen != false && d.Balance > 0).ToListAsync();
             ViewBag.AcctInfo = currAcct;
             CheckingTransferViewModel transferList = new CheckingTransferViewModel()
@@ -397,18 +293,17 @@ namespace RevatureProj1.Controllers
 
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Transfer(int id, string accountTransfer, decimal amount)
         {
-            var currAcct = await _context.BusinessAccounts.FirstOrDefaultAsync(m => m.Id == id);
+            var currAcct = await _context.TermAccounts.FirstOrDefaultAsync(m => m.Id == id);
             var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
             ViewBag.Success = false;
 
             ViewBag.AcctInfo = currAcct;
             var checkList = await _context.CheckingAccounts.Where(d => d.UserID == user && d.IsOpen != false).ToListAsync();
-            var bussinesList = await _context.BusinessAccounts.Where(d => d.UserID == user && d.Id != id && d.IsOpen != false).ToListAsync();
+            var bussinesList = await _context.BusinessAccounts.Where(d => d.UserID == user && d.IsOpen != false).ToListAsync();
             var loanList = await _context.LoanAccounts.Where(d => d.UserID == user && d.IsOpen != false && d.Balance > 0).ToListAsync();
 
             CheckingTransferViewModel transferList = new CheckingTransferViewModel()
@@ -418,12 +313,6 @@ namespace RevatureProj1.Controllers
                 LoanList = loanList
             };
 
-            if (amount < 0)
-            {
-                ModelState.AddModelError("", "Amount Can't be negative");
-                return View(transferList);
-            }
-
             if (ModelState.IsValid)
             {
 
@@ -431,29 +320,19 @@ namespace RevatureProj1.Controllers
                 var bussiAccount = await _context.BusinessAccounts.FirstOrDefaultAsync(m => m.UserID == currAcct.UserID && m.AccountNumber == accountTransfer);
                 var loanAccount = await _context.LoanAccounts.FirstOrDefaultAsync(m => m.UserID == currAcct.UserID && m.AccountNumber == accountTransfer);
 
-
-                var newBalance = 0M;
-                if(currAcct.Overdraft > 0)
+                int num = DateTime.Compare(DateTime.Today, currAcct.MaturityDate);
+                if (num < 0)
                 {
-                    var overdraftTotal = amount + CalculateOverdraftInterest(amount, currAcct);
-                    currAcct.Overdraft += overdraftTotal;
-                }
-                else
-                {
-                    if(amount > currAcct.Balance)
-                    {
-                        var newAmount = amount - currAcct.Balance;
-                        var overdraftTotal = newAmount + CalculateOverdraftInterest(newAmount, currAcct);
-                        currAcct.Overdraft += overdraftTotal;
-                    }
-                    else
-                    {
-                        newBalance = currAcct.Balance - amount;
-                    }
+                    ModelState.AddModelError("", "Cannot Transfer, Maturity Date has not been reached");
+                    return View(transferList);
                 }
 
-               //  var newBalance = currAcct.Balance - amount;
+                if (CheckWithdrawOverdraft(currAcct, amount)) //check if enough funds to withdraw
+                {
+                    return View(transferList);
+                }
 
+                var newBalance = currAcct.Balance - amount;
                 if (checkAccount != null)
                 {
 
@@ -537,38 +416,9 @@ namespace RevatureProj1.Controllers
             return View(transferList);
         }
 
-        private decimal CalculateOverdraftInterest(decimal overdraft, BusinessAccount currAcct)
+        private bool CDAccountsExists(int id)
         {
-            //throw new NotImplementedException();
-            decimal amount = 0;
-            amount = (overdraft * currAcct.InterestRate);
-
-            return amount;
-        }
-
-        private bool CheckWithdrawOverdraft(BusinessAccount currAcct, BusinessAccount bussAcct)
-        {
-            if (bussAcct.Balance > currAcct.Balance)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private bool CheckDepositAmount(BusinessAccount currAcct, BusinessAccount checkingAccount)
-        {
-            if (checkingAccount.Balance == 0)
-            {
-
-                ModelState.AddModelError("", "Did not specify Deposit Amount");
-                return true;
-            }
-            return false;
-        }
-
-        private bool BusinessAccountExists(int id)
-        {
-            return _context.BusinessAccounts.Any(e => e.Id == id);
+            return _context.TermAccounts.Any(e => e.Id == id);
         }
 
         private string randomAccountNumber()
@@ -579,6 +429,7 @@ namespace RevatureProj1.Controllers
             return acct;
         }
 
+
         private decimal randomInterestRate()
         {
             double percent = .1 + ((.3 - .1) * getrandom.NextDouble());
@@ -586,38 +437,21 @@ namespace RevatureProj1.Controllers
             return interest;
         }
 
-        private void AddTransaction(BusinessAccount currAcct, decimal balance, string v)
+        private bool CheckWithdrawOverdraft(CDAccounts currAcct, CDAccounts cdAcct)
         {
-            Transaction newTrans = new Transaction()
+            if ((currAcct.Balance - cdAcct.Balance) < 0)
             {
-                AccountNum = currAcct.AccountNumber,
-                Amount = balance,
-                Type = v,
-                UserID = currAcct.UserID,
-                TimeTransaction = DateTime.Now
 
-            };
-
-            _context.AccountTransactions.Add(newTrans);
-
-
-        }
-
-        private void AddTransaction(LoanAccount currAcct, decimal balance, string v)
-        {
-            Transaction newTrans = new Transaction()
+                ModelState.AddModelError("", "Not Enough Funds To Withdraw");
+                return true;
+            }
+            else if (cdAcct.Balance == 0)
             {
-                AccountNum = currAcct.AccountNumber,
-                Amount = balance,
-                Type = v,
-                UserID = currAcct.UserID,
-                TimeTransaction = DateTime.Now
 
-            };
-
-            _context.AccountTransactions.Add(newTrans);
-
-
+                ModelState.AddModelError("", "Did not specify Withdraw Amount");
+                return true;
+            }
+            return false;
         }
 
         private void AddTransaction(CDAccounts currAcct, decimal balance, string v)
@@ -654,6 +488,60 @@ namespace RevatureProj1.Controllers
 
         }
 
+        private void AddTransaction(BusinessAccount currAcct, decimal balance, string v)
+        {
+            Transaction newTrans = new Transaction()
+            {
+                AccountNum = currAcct.AccountNumber,
+                Amount = balance,
+                Type = v,
+                UserID = currAcct.UserID,
+                TimeTransaction = DateTime.Now
 
+            };
+
+            _context.AccountTransactions.Add(newTrans);
+
+
+        }
+
+        private void AddTransaction(LoanAccount currAcct, decimal balance, string v)
+        {
+            Transaction newTrans = new Transaction()
+            {
+                AccountNum = currAcct.AccountNumber,
+                Amount = balance,
+                Type = v,
+                UserID = currAcct.UserID,
+                TimeTransaction = DateTime.Now
+
+            };
+
+            _context.AccountTransactions.Add(newTrans);
+
+
+        }
+
+        private bool CheckWithdrawOverdraft(CDAccounts currAcct, decimal amount)
+        {
+            if ((currAcct.Balance - amount) < 0)
+            {
+
+                ModelState.AddModelError("", "Not Enough Funds To Withdraw");
+                return true;
+            }
+            else if (amount == 0)
+            {
+
+                ModelState.AddModelError("", "Did not specify Withdraw Amount");
+                return true;
+            }
+            else if (amount < 0)
+            {
+                ModelState.AddModelError("", "Amount Can't be negative");
+                return true;
+            }
+            return false;
+        }
     }
 }

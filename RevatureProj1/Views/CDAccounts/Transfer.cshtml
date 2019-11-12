@@ -22,6 +22,12 @@
         <dd class="col-sm-10">
             <span>@ViewBag.AcctInfo.Balance.ToString("c")</span>
         </dd>
+        <dt class="col-sm-2">
+            <span>Maturity Date</span>
+        </dt>
+        <dd class="col-sm-10">
+            <span>@ViewBag.AcctInfo.MaturityDate.ToString("MM/dd/yyyy")</span>
+        </dd>
     </dl>
 </div>
 
@@ -84,7 +90,7 @@
 @{
     if (ViewBag.Success)
     {
-        //<script>alert("Succesfully Transferred: $" + @ViewBag.Amount + " From " + "Account @ViewBag.AccountNumber");</script>
+        // <script>alert("Succesfully Transferred: $" + @ViewBag.Amount + " From " + "Account @ViewBag.AccountNumber");</script>
         <div class="alert alert-dismissible alert-success">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <strong>Transfer Succesfully Completed [$@ViewBag.Amount was transferred from Account:@ViewBag.AccountNumber] </strong>

@@ -9,9 +9,9 @@
 <p>
     <a asp-action="Create">Create Business Account</a>
 </p>
-<table class="table">
+<table class="table table-hover">
     <thead>
-        <tr>
+        <tr class="table-primary">
             <th>
                 @Html.DisplayNameFor(model => model.AccountNumber)
             </th>
@@ -60,10 +60,11 @@
                 @Html.DisplayFor(modelItem => item.InterestRate)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Withdraw" asp-route-id="@item.Id">Withdraw</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Deposit" asp-route-id="@item.Id">Deposit</a> |
+                <a asp-action="Transfer" asp-route-id="@item.Id">Transfer</a> |
+                <a asp-action="AccountTransactions" asp-route-id="@item.Id">Transactions</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Close Account</a>
             </td>
         </tr>
 }

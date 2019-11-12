@@ -1,24 +1,30 @@
-﻿@model Banking.Models.BusinessAccount
+﻿@model Banking.Models.CDAccounts
 
 @{
     ViewData["Title"] = "Delete";
 }
 
-<h1>Close Account</h1>
+<h1>Close CD Account</h1>
 
-<h3>Are you sure you want to close this Business Account?</h3>
+<h3>Are you sure you want to Close this CD Account?</h3>
 @{
-    if (Model.Balance > 0 || Model.Overdraft > 0)
+    int num = DateTime.Compare(DateTime.Today, Model.MaturityDate);
+    if (num < 0)
     {
-        <h4 style="color:red">In order to close account Balance must be $0.00 and Overdraft Facility must be $0.00</h4>
+        <h4 style="color:red">Can only close account after Maturity Date is reached</h4>
+    }
+    else if (Model.Balance > 0)
+    {
+        <h4 style="color:red">In order to close account balance must be $0.00</h4>
     }
     else if (Model.IsOpen == false)
     {
         <h4 style="color:red">Account has already been closed</h4>
     }
 }
+
 <div>
-    <h4>Business Account Information</h4>
+    <h4>CD Account Information</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -34,12 +40,6 @@
             @Html.DisplayFor(model => model.Balance)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Overdraft)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Overdraft)
-        </dd>
-        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.IsOpen)
         </dt>
         <dd class="col-sm-10">
@@ -51,13 +51,25 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.InterestRate)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaturityDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaturityDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CreationDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CreationDate)
+        </dd>
 
     </dl>
 
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Close Account" class="btn btn-danger"
-               @{ if (Model.Balance > 0 || Model.Overdraft > 0 || Model.IsOpen == false) { @: disabled="disabled"
+        <input type="submit" value="Delete" class="btn btn-danger"
+               @{ if (Model.Balance > 0 || Model.IsOpen == false || num < 0) { @: disabled="disabled"
                } } /> |
         <a asp-action="Index">Back to List</a>
     </form>

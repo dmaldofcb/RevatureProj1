@@ -5,7 +5,7 @@
 
 <h1>List of Transactions</h1>
 
-@using (Html.BeginForm("AccountTransactions","CheckingAccounts"))
+@using (Html.BeginForm("AccountTransactions", "BusinessAccounts"))
 {
 <div class="form-group">
     <span>Start Time</span>
@@ -22,10 +22,13 @@
     <span class="form-group">
         <button type="submit" name="sort10" value="yes" class="btn btn-secondary">Get Last 10 Transactions</button>
     </span>
-
 </div>
 }
 
+
+
+@*<form asp-action="AccountsTransactions">
+    </form>*@
 <table class="table table-hover">
     <thead>
         <tr class="table-primary">
@@ -64,6 +67,6 @@
         }
     </tbody>
 
-    <a asp-action="Index">Back to Checking Accounts</a>
+    <a asp-action="Index">Back to Business Accounts</a>
 
 </table>

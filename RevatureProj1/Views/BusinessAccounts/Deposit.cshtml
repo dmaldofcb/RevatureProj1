@@ -1,4 +1,4 @@
-﻿@model Banking.Models.CheckingAccount
+﻿@model Banking.Models.BusinessAccount
 
 @{
     ViewData["Title"] = "Deposit";
@@ -18,18 +18,29 @@
                 <label asp-for="Balance" class="control-label">Deposit Amount</label>
                 <input asp-for="Balance" class="form-control" value="0" />
                 <span asp-validation-for="Balance" class="text-danger"></span>
-                @{
-                    if (Model.Balance == 0)
+                @{ 
+                    if(Model.Balance == 0)
                     {
                         @Html.ValidationMessageFor(model => model.Balance, "", new { @class = "text-danger" })
                     }
                 }
             </div>
-
+            @{ 
+                if(Model.Overdraft > 0)
+                {
+                      <p style="color:forestgreen;">Warning: Account has a Overdraft Facility, any deposit will first pay off Overdraft Facility</p>
+                }
+            }
             <div class="form-group">
-                <input type="submit" value="Submit Deposit" class="btn btn-primary"
-                       @{ if (Model.IsOpen == false) { @: disabled="disabled"
-                       } } />
+                <input type="submit" value="Submit Deposit" class="btn btn-primary" 
+                            @{ 
+                               if(Model.IsOpen == false)
+                               {
+                                    @:disabled="disabled" 
+                               }
+                            }
+                       
+                       />
             </div>
             <a asp-action="Index">Back to List</a>
         </form>

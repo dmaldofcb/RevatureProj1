@@ -14,7 +14,6 @@ namespace Banking.Models
         public string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
 
-       // public virtual ICollection<CheckingAccount> CheckingAccounts { get; set; }
 
     }
 }

@@ -1,16 +1,16 @@
-﻿@model Banking.Models.BusinessAccount
+﻿@model Banking.Models.LoanAccount
 
 @{
     ViewData["Title"] = "Delete";
 }
 
-<h1>Close Account</h1>
+<h1>Close Loan Account</h1>
 
-<h3>Are you sure you want to close this Business Account?</h3>
+<h3>Are you sure you want to close this Loan Account?</h3>
 @{
-    if (Model.Balance > 0 || Model.Overdraft > 0)
+    if (Model.Balance > 0)
     {
-        <h4 style="color:red">In order to close account Balance must be $0.00 and Overdraft Facility must be $0.00</h4>
+        <h4 style="color:red">In order to close loan account, loan balance must be $0.00</h4>
     }
     else if (Model.IsOpen == false)
     {
@@ -18,7 +18,7 @@
     }
 }
 <div>
-    <h4>Business Account Information</h4>
+    <h4>Loan Account Information</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -32,12 +32,6 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Balance)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Overdraft)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Overdraft)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.IsOpen)
@@ -57,8 +51,9 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Close Account" class="btn btn-danger"
-               @{ if (Model.Balance > 0 || Model.Overdraft > 0 || Model.IsOpen == false) { @: disabled="disabled"
+               @{ if (Model.Balance > 0 || Model.IsOpen == false) { @: disabled="disabled"
                } } /> |
         <a asp-action="Index">Back to List</a>
     </form>
 </div>
+

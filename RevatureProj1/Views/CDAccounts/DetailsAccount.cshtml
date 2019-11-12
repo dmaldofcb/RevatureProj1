@@ -1,0 +1,50 @@
+﻿@model Banking.Models.CDAccounts
+
+<div>
+    <h4>CD Account Information</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Balance)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Balance)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IsOpen)
+        </dt>
+        <dd class="col-sm-10">
+            @{
+                if (Model.IsOpen)
+                {<span>Open</span>}
+                else
+                { <span>Close</span>}
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.InterestRate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.InterestRate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AccountNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AccountNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MaturityDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MaturityDate)
+        </dd>
+        <dt class="col-sm-2">
+            <span>Todays Date</span>
+        </dt>
+        <dd class="col-sm-10">
+            <span>@DateTime.Today.ToString("MM/dd/yyyy")</span>
+        </dd>
+    </dl>
+</div>
+

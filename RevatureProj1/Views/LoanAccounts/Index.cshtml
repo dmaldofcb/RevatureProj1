@@ -1,17 +1,18 @@
-﻿@model IEnumerable<Banking.Models.CheckingAccount>
+﻿@model IEnumerable<Banking.Models.LoanAccount>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>My Checking Accounts</h1>
+<h1>My Loan Accounts</h1>
 
 <p>
-    <a asp-action="Create">Create Checking Account</a>
+    <a asp-action="Create">Create Loan Account</a>
 </p>
 <table class="table table-hover">
     <thead>
         <tr class="table-primary">
+
             <th>
                 @Html.DisplayNameFor(model => model.AccountNumber)
             </th>
@@ -54,21 +55,11 @@
                 @Html.DisplayFor(modelItem => item.InterestRate)
             </td>
             <td>
-                @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |*@
-              
-                <a asp-action="Withdraw" asp-route-id="@item.Id">Withdraw</a> |
-
-           <a asp-action="Deposit" asp-route-id="@item.Id">Deposit</a> |
-
-           <a asp-action="Transfer" asp-route-id="@item.Id">Transfer</a> |
-
-           <a asp-action="AccountTransactions" asp-route-id="@item.Id">Transactions</a> |
-
-           <a asp-action="Delete" asp-route-id="@item.Id">Close Account</a>
-
-       </td>
-
-   </tr>
+                <a asp-action="DirectDeposit" asp-route-id="@item.Id">Direct Payment</a> |
+                <a asp-action="AccountTransactions" asp-route-id="@item.Id">Transactions</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Close Account</a>
+            </td>
+        </tr>
 }
     </tbody>
 </table>

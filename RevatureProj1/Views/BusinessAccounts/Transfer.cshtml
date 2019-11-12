@@ -22,10 +22,17 @@
         <dd class="col-sm-10">
             <span>@ViewBag.AcctInfo.Balance.ToString("c")</span>
         </dd>
+        <dt class="col-sm-2">
+            <span>Overdraft</span>
+        </dt>
+        <dd class="col-sm-10">
+            <span>@ViewBag.AcctInfo.Overdraft.ToString("c")</span>
+        </dd>
     </dl>
 </div>
 
 <hr />
+
 <hr />
 <h4>Choose Destination Account</h4>
 <div class="form-group row">
@@ -79,15 +86,16 @@
         </form>
     </div>
 </div>
-<a asp-action="Index">Back to Checking Accounts</a>
+<a asp-action="Index">Back to Business Accounts</a>
 
 @{
     if (ViewBag.Success)
     {
-        //<script>alert("Succesfully Transferred: $" + @ViewBag.Amount + " From " + "Account @ViewBag.AccountNumber");</script>
+        // <script>alert("Succesfully Transferred: $" + @ViewBag.Amount + " From " + "Account @ViewBag.AccountNumber");</script>
         <div class="alert alert-dismissible alert-success">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             <strong>Transfer Succesfully Completed [$@ViewBag.Amount was transferred from Account:@ViewBag.AccountNumber] </strong>
         </div>
+
     }
 }

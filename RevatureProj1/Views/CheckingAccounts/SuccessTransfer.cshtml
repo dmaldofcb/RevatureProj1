@@ -1,0 +1,49 @@
+﻿
+@{
+    ViewData["Title"] = "SuccessTransfer";
+}
+
+<h1>Succesfully Transferred</h1>
+
+<div>
+    <h4>From Account</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            <p>Account Number</p>
+        </dt>
+        <dd class="col-sm-10">
+            <p>@ViewBag.FromAcct.AccountNumber</p>
+        </dd>
+        <dt class="col-sm-2">
+            <p>Balance</p>
+        </dt>
+        <dd class="col-sm-10">
+            <p>@ViewBag.FromAcct.Balance</p>
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <h4>To Account</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            <p>Account Number</p>
+        </dt>
+        <dd class="col-sm-10">
+            <p>@ViewBag.ToAcct.AccountNumber</p>
+        </dd>
+        <dt class="col-sm-2">
+            <p>Balance</p>
+        </dt>
+        <dd class="col-sm-10">
+            <p>@ViewBag.ToAcct.Balance</p>
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
